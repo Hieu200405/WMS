@@ -1,0 +1,32 @@
+{
+  "name": "wms",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Warehouse management system monorepo",
+  "workspaces": [
+    "frontend",
+    "server",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace server\" \"npm run dev --workspace frontend\"",
+    "dev:server": "npm run dev --workspace server",
+    "dev:frontend": "npm run dev --workspace frontend",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces",
+    "build": "npm run build --workspaces",
+    "prepare": "husky install",
+    "seed": "npm run seed --workspace server",
+    "setup": "node ./scripts/setup-env.mjs",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
