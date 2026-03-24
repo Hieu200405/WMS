@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: |
+            wms/package-lock.json
+            wms/frontend/package-lock.json
+            wms/server/package-lock.json
+            wms/shared/package-lock.json
+
+      - name: Install dependencies
+        working-directory: wms
+        run: npm install
+
+      - name: Lint
+        working-directory: wms
+        run: npm run lint
+
+      - name: Test server
+        working-directory: wms
+        run: npm --prefix server test
+
+      - name: Test frontend
+        working-directory: wms/frontend
+        run: npm run test -- --run
+
+      - name: Build frontend
+        working-directory: wms/frontend
+        run: npm run build
