@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply h-full antialiased;
+  }
+  body {
+    @apply min-h-full bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-300 transition hover:bg-slate-400 dark:bg-slate-800 dark:hover:bg-slate-700;
+  }
+}
+
+@layer components {
+  /* Premium Cards */
+  .card {
+    @apply overflow-hidden rounded-2xl border border-slate-200/60 bg-white/70 backdrop-blur-md transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/5 dark:border-slate-800/60 dark:bg-slate-900/50;
+  }
+  
+  .card-premium {
+    @apply card relative border-none bg-gradient-to-br from-white via-white to-indigo-50/30 p-0 shadow-sm dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/20;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 active:scale-[0.98] disabled:opacity-50;
+  }
+  
+  .btn-primary {
+    @apply btn bg-indigo-600 text-white shadow-md shadow-indigo-200 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-300 dark:shadow-none dark:hover:bg-indigo-500;
+  }
+  
+  .btn-secondary {
+    @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800;
+  }
+
+  /* Glassmorphism Sidebar */
+  .sidebar-glass {
+    @apply sticky top-0 h-screen border-r border-slate-200 bg-white/80 backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-950/80;
+  }
+
+  /* Inputs */
+  .input {
+    @apply rounded-xl border border-slate-200 bg-white/50 px-4 py-2.5 text-sm ring-indigo-500 transition-all placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 dark:border-slate-800 dark:bg-slate-900/50 dark:focus:bg-slate-900;
+  }
+}
+
+/* Animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
