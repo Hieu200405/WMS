@@ -1,0 +1,26 @@
+{
+  "errors": {
+    "status": {
+      "name": "ValidatorError",
+      "message": "`diff` is not a valid enum value for path `status`.",
+      "properties": {
+        "message": "`diff` is not a valid enum value for path `status`.",
+        "type": "enum",
+        "enumValues": [
+          "draft",
+          "approved",
+          "applied"
+        ],
+        "path": "status",
+        "value": "diff",
+        "length": 4
+      },
+      "kind": "enum",
+      "path": "status",
+      "value": "diff"
+    }
+  },
+  "_message": "Stocktake validation failed",
+  "name": "ValidationError",
+  "message": "Stocktake validation failed: status: `diff` is not a valid enum value for path `status`."
+}
