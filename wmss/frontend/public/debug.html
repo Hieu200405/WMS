@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear WMS LocalStorage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #b91c1c;
+        }
+        .success {
+            background: #16a34a;
+        }
+        .success:hover {
+            background: #15803d;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        pre {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔧 WMS Debug Tools</h1>
+        <p>Use these tools to debug the Audit Log issue.</p>
+        
+        <h2>Step 1: Clear LocalStorage</h2>
+        <p>This will remove old cached data and force reload from mockData.js</p>
+        <button onclick="clearStorage()">Clear LocalStorage</button>
+        
+        <h2>Step 2: Check Current Data</h2>
+        <button class="success" onclick="checkData()">Check AuditLogs in LocalStorage</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function clearStorage() {
+            try {
+                const key = 'wms-mock-data';
+                const before = localStorage.getItem(key);
+                localStorage.removeItem(key);
+                
+                const result = document.getElementById('result');
+                result.className = 'info';
+                result.style.display = 'block';
+                result.innerHTML = `
+                    <strong>✅ Success!</strong><br>
+                    LocalStorage cleared successfully.<br><br>
+                    <strong>Next steps:</strong><br>
+                    1. Go back to your WMS application<br>
+                    2. Reload the page (F5 or Ctrl+R)<br>
+                    3. Navigate to a Receipt detail page<br>
+                    4. Check if Audit Logs appear
+                `;
+            } catch (error) {
+                const result = document.getElementById('result');
+                result.className = 'warning';
+                result.style.display = 'block';
+                result.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+
+        function checkData() {
+            try {
+                const key = 'wms-mock-data';
+                const data = localStorage.getItem(key);
+                
+                const result = document.getElementById('result');
+                result.style.display = 'block';
+                
+                if (!data) {
+                    result.className = 'warning';
+                    result.innerHTML = `
+                        <strong>⚠️ No data found</strong><br>
+                        LocalStorage is empty. This is normal if you just cleared it.<br>
+                        Reload your WMS application to populate it with fresh data.
+                    `;
+                    return;
+                }
+                
+                const parsed = JSON.parse(data);
+                const hasAuditLogs = parsed.auditLogs && Array.isArray(parsed.auditLogs);
+                const auditLogsCount = hasAuditLogs ? parsed.auditLogs.length : 0;
+                
+                result.className = 'info';
+                
+                if (!hasAuditLogs || auditLogsCount === 0) {
+                    result.innerHTML = `
+                        <strong>⚠️ Problem Found!</strong><br>
+                        AuditLogs is ${hasAuditLogs ? 'empty' : 'missing'} in LocalStorage.<br><br>
+                        <strong>Solution:</strong><br>
+                        1. Click "Clear LocalStorage" above<br>
+                        2. Reload your WMS application<br>
+                        3. Check again
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <strong>✅ AuditLogs Found!</strong><br>
+                        Count: ${auditLogsCount} entries<br><br>
+                        <strong>Sample Data:</strong><br>
+                        <pre>${JSON.stringify(parsed.auditLogs.slice(0, 2), null, 2)}</pre>
+                        <br>
+                        <strong>Receipt IDs in audit logs:</strong><br>
+                        ${[...new Set(parsed.auditLogs.map(log => log.entityId))].join(', ')}
+                    `;
+                }
+            } catch (error) {
+                const result = document.getElementById('result');
+                result.className = 'warning';
+                result.style.display = 'block';
+                result.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+            }
+        }
+
+        // Auto-check on page load
+        window.addEventListener('load', checkData);
+    </script>
+</body>
+</html>
