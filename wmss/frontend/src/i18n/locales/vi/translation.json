@@ -1,0 +1,638 @@
+{
+  "app": {
+    "title": "Hệ thống quản lý kho",
+    "language": "Ngôn ngữ",
+    "logout": "Đăng xuất",
+    "theme": "Giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "search": "Tìm kiếm...",
+    "create": "Tạo mới",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "back": "Quay lại",
+    "status": "Trạng thái",
+    "filter": "Bộ lọc",
+    "actions": "Thao tác",
+    "total": "Tổng cộng",
+    "lineItems": "Dòng hàng",
+    "exportPdf": "Xuất PDF",
+    "reset": "Khôi phục dữ liệu mẫu",
+    "sku": "SKU",
+    "isActive": "Hoạt động",
+    "notActive": "Tạm ngưng",
+    "exportExcel": "Xuất Excel",
+    "close": "Đóng",
+    "details": "Chi tiết",
+    "approve": "Duyệt",
+    "reject": "Từ chối",
+    "complete": "Hoàn tất"
+  },
+  "auth": {
+    "invalid": "Tài khoản hoặc mật khẩu không chính xác",
+    "locked": "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên."
+  },
+  "navigation": {
+    "dashboard": "Tổng quan",
+    "products": "Sản phẩm",
+    "categories": "Danh mục",
+    "suppliers": "Nhà cung cấp",
+    "customers": "Khách hàng",
+    "warehouse": "Cấu trúc kho",
+    "inventory": "Tồn kho",
+    "receipts": "Nhập kho",
+    "deliveries": "Xuất kho",
+    "incidents": "Phiếu sự cố",
+    "stocktaking": "Kiểm kê",
+    "adjustments": "Điều chỉnh tồn kho",
+    "returns": "Trả hàng",
+    "disposals": "Hủy hàng",
+    "reports": "Báo cáo",
+    "financials": "Công nợ & Thanh toán",
+    "pdfTest": "File PDF",
+    "users": "Người dùng",
+    "scanner": "Quét mã",
+    "audit": "Lịch sử hoạt động",
+    "settings": "Cài đặt"
+  },
+  "audit": {
+    "title": "Nhật ký hoạt động",
+    "description": "Theo dõi toàn bộ lịch sử thay đổi của hệ thống",
+    "time": "Thời gian",
+    "actor": "Người thực hiện",
+    "action": "Hành động",
+    "entity": "Đối tượng",
+    "details": "Chi tiết thay đổi",
+    "filter": {
+      "entity": "Loại đối tượng",
+      "timeRange": "Khoảng thời gian",
+      "startDate": "Từ ngày",
+      "endDate": "Đến ngày",
+      "searchPlaceholder": "Tìm kiếm theo người dùng hoặc nội dung..."
+    },
+    "actions": {
+      "create": "Tạo mới",
+      "created": "Tạo mới",
+      "update": "Cập nhật",
+      "updated": "Cập nhật",
+      "delete": "Xóa",
+      "deleted": "Xóa",
+      "login": "Đăng nhập",
+      "logout": "Đăng xuất",
+      "approve": "Phê duyệt",
+      "approved": "Đã phê duyệt",
+      "reject": "Từ chối",
+      "rejected": "Đã từ chối",
+      "confirms": "Xác nhận",
+      "confirmed": "Đã xác nhận",
+      "cancel": "Hủy bỏ",
+      "cancelled": "Đã hủy",
+      "complete": "Hoàn tất",
+      "completed": "Hoàn tất",
+      "import": "Nhập khẩu",
+      "export": "Xuất khẩu",
+      "setting.updated": "Cập nhật cấu hình"
+    },
+    "entities": {
+      "Product": "Sản phẩm",
+      "Category": "Danh mục",
+      "Partner": "Đối tác",
+      "Receipt": "Phiếu nhập",
+      "Delivery": "Phiếu xuất",
+      "Inventory": "Tồn kho",
+      "User": "Người dùng",
+      "Setting": "Cấu hình",
+      "Incident": "Sự cố",
+      "Stocktake": "Kiểm kê",
+      "Return": "Trả hàng",
+      "Disposal": "Hủy hàng"
+    }
+  },
+  "login": {
+    "title": "Đăng nhập hệ thống",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "remember": "Ghi nhớ",
+    "hint": ""
+  },
+  "roles": {
+    "Admin": "Quản trị viên",
+    "Manager": "Quản lý",
+    "Staff": "Nhân viên"
+  },
+  "dashboard": {
+    "welcome": "Chào mừng, {{name}}!",
+    "todayPending": "Hôm nay kho hàng có <1>{{count}}</1> vận hành đang chờ xử lý.",
+    "cards": {
+      "inventoryValue": "Giá trị tồn kho",
+      "pendingReceipts": "Phiếu nhập chờ",
+      "pendingDeliveries": "Phiếu xuất chờ",
+      "incidents": "Sự cố đang xử lý"
+    },
+    "metrics": {
+      "inventoryValue": "Giá trị tồn kho",
+      "pendingReceipts": "Nhập kho chờ",
+      "pendingDeliveries": "Xuất kho chờ",
+      "openIncidents": "Sự cố đang xử lý",
+      "expiringSoon": "Sắp hết hạn"
+    },
+    "trends": {
+      "vsLastMonth": "+12% vs tháng trước",
+      "priority": "Cần ưu tiên",
+      "today": "Hôm nay",
+      "urgent": "Cần xử lý ngay",
+      "lessThan30Days": "< 30 ngày"
+    },
+    "performance": "Hiệu suất vận hành",
+    "revenueCostLast6Months": "Doanh thu & Chi phí 6 tháng gần nhất",
+    "revenue": "Doanh thu",
+    "expense": "Chi phí",
+    "inventoryStatus": "Trạng thái tồn kho",
+    "allocationRatio": "Tỷ lệ phân bổ hàng hóa",
+    "aiInsights": "Gợi ý từ AI: Dự báo hết hàng",
+    "aiDescription": "Dựa trên tốc độ bán hàng thực tế trong 30 ngày qua",
+    "stockoutChance": "Khả năng hết hàng:",
+    "inDays": "Trong {{days}} ngày",
+    "planRestock": "Lập kế hoạch nhập hàng",
+    "recentActivities": "Hoạt động gần đây"
+  },
+  "warehouse": {
+    "title": "Cấu trúc kho",
+    "addNode": "Thêm nút",
+    "editNode": "Chỉnh sửa nút",
+    "barcode": "Barcode/QR vị trí",
+    "type": "Cấp",
+    "name": "Tên",
+    "code": "Mã vị trí",
+    "subtitle": "Quản lý mã vị trí để chuyển động trong vị trí ngay lập tức.",
+    "expandAll": "Mở rộng tất cả",
+    "collapseAll": "Thu gọn tất cả",
+    "title2": "Cấu trúc phân cấp",
+    "subtitle2": "Mở rộng các nhánh để xem các vị trí con.",
+    "mapView": "Xem bản đồ",
+    "addChild": "Thêm nút con"
+  },
+  "products": {
+    "title": "Danh sách sản phẩm",
+    "sku": "SKU",
+    "name": "Tên sản phẩm",
+    "unit": "Đơn vị",
+    "priceIn": "Giá nhập",
+    "priceOut": "Giá bán",
+    "category": "Danh mục",
+    "create": "Thêm sản phẩm",
+    "categoryFilter": "Lọc theo danh mục",
+    "allCategories": "Tất cả danh mục",
+    "printLabel": "In tem"
+  },
+  "categories": {
+    "title": "Danh mục sản phẩm",
+    "create": "Thêm danh mục",
+    "description": "Mô tả"
+  },
+  "partners": {
+    "suppliers": "Nhà cung cấp",
+    "customers": "Khách hàng",
+    "suppliername": "Tên nhà cung cấp",
+    "contact": "Liên hệ",
+    "businessType": "Loại hình",
+    "businessTypes": {
+      "manufacturer": "Nhà sản xuất",
+      "distributor": "Nhà phân phối",
+      "retailer": "Nhà bán lẻ"
+    },
+    "manufacturer": "Nhà sản xuất",
+    "distributor": "Nhà phân phối",
+    "retailer": "Nhà bán lẻ",
+    "individual": "Cá nhân",
+    "company": "Doanh nghiệp",
+    "subtitle": "Quản lý danh sách nhà cung cấp và thông tin liên hệ.",
+    "customername": "Tên khách hàng",
+    "customerType": "Loại khách hàng",
+    "customerTypes": {
+      "individual": "Cá nhân",
+      "corporate": "Doanh nghiệp"
+    },
+    "creditLimit": "Hạn mức tín dụng",
+    "paymentTerm": "Điều khoản thanh toán",
+    "paymentTerms": {
+      "cod": "Thanh toán khi nhận hàng (COD)",
+      "net15": "Công nợ 15 ngày",
+      "net30": "Công nợ 30 ngày",
+      "prepaid": "Trả trước"
+    },
+    "customerSubtitle": "Quản lý danh sách khách hàng và hạn mức tín dụng."
+  },
+  "inventory": {
+    "subtitle": "Theo dõi chi tiết mức tồn kho và vị trí lưu trữ hàng hóa.",
+    "quantity": "Số lượng tồn",
+    "product": "Sản phẩm",
+    "location": "Vị trí",
+    "batch": "Lo",
+    "viewLocation": "Xem vị trí",
+    "allCategories": "Tất cả danh mục",
+    "checkSmart": "Kiểm tra thông minh",
+    "locationList": "Danh sách vị trí",
+    "noLocation": "Không có tồn tại vị trí",
+    "expiry": "HSD",
+    "messages": {
+      "checking": "Đang kiểm tra tồn kho...",
+      "sufficient": "Hệ thống đủ hàng, không cần bổ sung.",
+      "checkError": "Lỗi kiểm tra",
+      "createSuccess": "Đã tạo {{count}} phiếu nhập kho nháp thành công!",
+      "createError": "Lỗi tạo phiếu"
+    }
+  },
+  "receipts": {
+    "title": "Phiếu nhập kho",
+    "create": "Tạo phiếu nhập",
+    "supplier": "Nhà cung cấp",
+    "date": "Ngày nhập",
+    "status": {
+      "Draft": "Nhập",
+      "Approved": "Đã duyệt",
+      "Supplier Confirmed": "Nhà cung cấp xác nhận",
+      "Completed": "Hoàn tất",
+      "Rejected": "Từ chối"
+    },
+    "hasShortage": "Giao thiếu",
+    "shortageNote": "Ghi chú giao thiếu",
+    "damageNote": "Biên bản hàng hỏng",
+    "approve": "Duyệt",
+    "complete": "Hoàn tất",
+    "confirmSupplier": "Nhà cung cấp xác nhận",
+    "lines": {
+      "product": "Sản phẩm",
+      "quantity": "Số lượng",
+      "price": "Đơn giá"
+    },
+    "errors": {
+      "selectSupplier": "Vui lòng chọn nhà cung cấp",
+      "addProduct": "Vui lòng thêm ít nhất một sản phẩm",
+      "createError": "Lỗi khi tạo phiếu nhập",
+      "updateError": "Lỗi khi thay đổi trạng thái",
+      "loadError": "Không thể tải dữ liệu phiếu nhập",
+      "exportError": "Không thể xuất file"
+    },
+    "detail": "Chi tiết",
+    "description": "Quản lý phiếu nhập kho và trạng thái.",
+    "exportExcel": "Xuất Excel",
+    "autoCode": "Mã phiếu (Tự động)",
+    "selectSupplierPlaceholder": "Chọn nhà cung cấp",
+    "note": "Ghi chú",
+    "rejectTitle": "Từ chối phiếu nhập",
+    "reject": "Từ chối",
+    "rejectDescription": "Bạn có thể ghi chú lý do từ chối để theo dõi sau này.",
+    "noteOptional": "Ghi chú (tùy chọn)",
+    "rejectPlaceholder": "VD: Sai nhà cung cấp, sai giá nhập...",
+    "actions": {
+      "approve": "Duyệt",
+      "reject": "Từ chối",
+      "supplierConfirm": "NCC xác nhận",
+      "complete": "Hoàn tất"
+    },
+    "subtitle": "Quản lý phiếu nhập kho và quá trình chuyển đổi trạng thái.",
+    "supplierConfirm": "Nhà cung cấp xác nhận"
+  },
+  "deliveries": {
+    "title": "Phiếu xuất kho",
+    "create": "Tạo phiếu xuất",
+    "customer": "Khách hàng",
+    "date": "Ngày xuất",
+    "expectedDate": "Ngày dự kiến giao",
+    "status": {
+      "Draft": "Nhập",
+      "Approved": "Đã duyệt",
+      "Prepared": "Đã chuẩn bị",
+      "Delivered": "Đã giao",
+      "Completed": "Hoàn tất",
+      "Cancelled": "Hủy"
+    },
+    "prepare": "Chuẩn bị",
+    "deliver": "Giao hàng",
+    "complete": "Hoàn tất",
+    "deliveryNote": "Phiếu xuất",
+    "subtitle": "Quản lý phiếu xuất kho và quá trình chuyển đổi trạng thái."
+  },
+  "incidents": {
+    "title": "Phiếu sự cố",
+    "subtitle": "Ghi nhận giao thiếu, hàng hỏng, giao chậm hoặc từ chối của khách hàng và lưu lại hướng xử lý tiếp theo.",
+    "type": "Loại sự cố",
+    "selectType": "Chọn loại sự cố",
+    "note": "Nội dung",
+    "action": "Hướng xử lý",
+    "create": "Ghi nhận sự cố",
+    "refType": "Loại hành",
+    "refId": "ID tham chiếu",
+    "date": "Ngày tạo",
+    "product": "Sản phẩm",
+    "productPlaceholder": "Chọn sản phẩm",
+    "quantity": "Số lượng",
+    "typePlaceholder": "Chọn loại sự cố",
+    "actionPlaceholder": "Chọn hướng xử lý",
+    "refPlaceholder": "Mã phiếu nhập hoặc xuất",
+    "addLine": "Thêm sản phẩm",
+    "removeLine": "Xóa",
+    "refTypes": {
+      "receipt": "Nhập kho",
+      "delivery": "Xuất kho"
+    },
+    "types": {
+      "shortage": "Giao thiếu",
+      "late": "Giao chậm",
+      "damaged": "Hàng hỏng",
+      "rejected": "Từ chối"
+    },
+    "actions": {
+      "replenish": "Điều chỉnh tồn kho",
+      "return": "Trả hàng",
+      "refund": "Hoàn tiền"
+    },
+    "statusValues": {
+      "open": "Mở",
+      "inProgress": "Đang xử lý",
+      "resolved": "Đã xử lý"
+    }
+  },
+  "stocktaking": {
+    "title": "Kiểm kê kho",
+    "subtitle": "Thực hiện kiểm kê định kỳ hoặc đặt xuất để đảm bảo chính xác của s? liệu tồn kho.",
+    "create": "Tạo phiếu kiểm kê",
+    "adjustments": "Phiếu điều chỉnh",
+    "difference": "Chênh lệch",
+    "apply": "Áp dụng",
+    "approve": "Duyệt kiểm kê",
+    "approvedBy": "Duyệt bởi",
+    "approvedAt": "Duyệt lúc",
+    "minutes": "Ghi chú",
+    "attachments": "Tập đính kèm",
+    "minutesPlaceholder": "Ghi chú hoặc ghi chú duyệt",
+    "attachmentsPlaceholder": "Tải lên biên bản kiểm kê hoặc hình ảnh",
+    "items": "Sản phẩm"
+  },
+  "adjustments": {
+    "title": "Điều chỉnh tồn kho",
+    "subtitle": "Ghi nhận điều chỉnh tồn kho theo vị trí.",
+    "create": "Tạo phiếu điều chỉnh",
+    "code": "Mã",
+    "reason": "Lý do",
+    "lines": "Dòng hàng",
+    "approvedAt": "Ngày duyệt",
+    "addLine": "Thêm dòng",
+    "product": "Sản phẩm",
+    "location": "Vị trí",
+    "batch": "Lô",
+    "delta": "Chênh lệch",
+    "selectProduct": "Chọn sản phẩm",
+    "selectLocation": "Chọn vị trí",
+    "selectBatch": "Chọn lô",
+    "noBatch": "Không có lô",
+    "reasons": {
+      "loss": "Mất mát",
+      "mismatch": "Nhầm lẫn",
+      "damaged": "Hư hỏng",
+      "stocktakeError": "Kiểm kê sai"
+    }
+  },
+  "returns": {
+    "title": "Phiếu trả hàng",
+    "create": "Tạo phiếu trả hàng",
+    "reason": "Lý do",
+    "status": {
+      "Awaiting Inspection": "Chờ kiểm tra",
+      "Restocked": "Đã nhập lại",
+      "Disposed": "Đã chuyển hủy"
+    },
+    "subtitle": "Ghi nhận hàng trả từ khách hàng và quyết định nhập lại hay hủy.",
+    "from": "Khách hàng",
+    "items": "Sản phẩm"
+  },
+  "disposals": {
+    "title": "Phiếu hủy hàng",
+    "create": "Tạo phiếu hủy",
+    "council": "Hội đồng hủy",
+    "attachment": "Biên bản hủy",
+    "reason": "Lý do hủy",
+    "reasons": {
+      "expired": "Hết hạn",
+      "damaged": "Hàng hỏng",
+      "lost": "Mất mát"
+    },
+    "subtitle": "Xử lý hủy hàng hết hạn, hàng hỏng hoặc mất mát sau khi được quản lý phê duyệt."
+  },
+  "reports": {
+    "title": "Báo cáo kho",
+    "inventory": "Tồn kho",
+    "receipts": "Nhập kho",
+    "deliveries": "Xuất kho",
+    "stocktaking": "Kiểm kê & điều chỉnh",
+    "financials": "Công nợ",
+    "filter": {
+      "dateRange": "Lọc theo khoảng thời gian",
+      "from": "Từ ngày",
+      "to": "Đến ngày",
+      "apply": "Áp dụng",
+      "clear": "Xóa bộ lọc"
+    },
+    "stats": {
+      "totalInventoryValue": "Tổng giá trị tồn kho",
+      "products": "Sản phẩm",
+      "pendingReceipts": "Phiếu nhập chờ xử lý",
+      "pendingDeliveries": "Phiếu xuất chờ xử lý",
+      "totalSkus": "Tổng số mã hàng",
+      "lowStock": "Sắp hết hàng",
+      "outOfStock": "Hết hàng",
+      "stockValue": "Giá trị tồn kho (Ước tính)",
+      "inboundVolume": "Khối lượng nhập kho",
+      "pending": "Đang chờ",
+      "completed": "Hoàn tất",
+      "avgProcessingTime": "Thời gian xử lý TB",
+      "outboundVolume": "Khối lượng xuất kho",
+      "onTimeDelivery": "Giao hàng đúng hạn",
+      "totalStocktakes": "Số lần kiểm kê",
+      "accuracyRate": "Tỷ lệ chính xác",
+      "netAdjustments": "Giá trị điều chỉnh ròng",
+      "discrepancyRate": "Tỷ lệ sai lệch",
+      "totalReceipts": "Tổng phiếu nhập",
+      "totalDeliveries": "Tổng phiếu xuất"
+    },
+    "charts": {
+      "revenueVsExpenses": "Doanh thu vs Chi phí (6 tháng)",
+      "inventoryStatus": "Trạng thái tồn kho",
+      "stockDistribution": "Phân bổ tồn kho theo danh mục",
+      "topProducts": "Top 5 sản phẩm theo giá trị",
+      "monthlyInbound": "Nhập kho hàng tháng",
+      "monthlyOutbound": "Xuất kho hàng tháng",
+      "deliveryStatus": "Trạng thái giao hàng",
+      "accuracyTrend": "Xu hướng độ chính xác tồn kho"
+    },
+    "common": {
+      "noData": "Không có dữ liệu báo cáo",
+      "downloadCompleted": "Tải xuống hoàn tất",
+      "downloadFailed": "Tải xuống thất bại",
+      "refresh": "Làm mới",
+      "exportPdf": "Xuất PDF",
+      "revenue": "Doanh thu",
+      "expenses": "Chi phí",
+      "available": "Sẵn sàng",
+      "allocated": "Đã phân bổ",
+      "reserved": "Đã giữ chỗ",
+      "quarantined": "Hàng lỗi/Chờ kiểm",
+      "volume": "Khối lượng",
+      "value": "Giá trị",
+      "orders": "Đơn hàng"
+    },
+    "tabs": {
+      "overview": "Tổng quan",
+      "inventoryLevel": "Mức tồn kho",
+      "inbound": "Nhập kho",
+      "outbound": "Xuất kho",
+      "stocktakeAccuracy": "Độ chính xác kiểm kê"
+    }
+  },
+  "financials": {
+    "title": "Quản lý công nợ",
+    "transactions": "Lịch sử giao dịch",
+    "amount": "Số tiền",
+    "balance": "Số dư",
+    "type": "Loại",
+    "payment": "Thanh toán",
+    "liability": "Ghi nợ",
+    "refund": "Hoàn tiền",
+    "reference": "Tham chiếu",
+    "date": "Ngày",
+    "partner": "Đối tác",
+    "createPayment": "Ghi nhận thanh toán",
+    "debtAmount": "Số tiền nợ",
+    "receivable": "Phải thu",
+    "payable": "Phải trả",
+    "totalReceivable": "Tổng cộng nợ phải thu",
+    "totalPayable": "Tổng cộng nợ phải trả",
+    "overdueCount": "Số công nợ quá hạn",
+    "totalCollected": "Tổng thu trong kỳ",
+    "totalPaidInPeriod": "Tổng trả trong kỳ",
+    "payNow": "Trả ngay",
+    "collectNow": "Thu",
+    "quickPayAmount": "Số tiền thanh toán",
+    "id": "Mã Transaction",
+    "relatedReceipt": "Phiếu liên quan",
+    "paidAmount": "Số tiền trả",
+    "paymentDueDate": "Hạn thanh toán",
+    "status": "Trạng thái",
+    "overdueDays": "Quá hạn {{days}} ngày",
+    "filterOverdue": "Chỉ hiện quá hạn",
+    "filterUnpaid": "Chưa thanh toán",
+    "debtSummary": "Tóm tắt công nợ",
+    "debtCount": "Số phiếu nợ",
+    "overdueReceipts": "Phiếu quá hạn"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "description": "Quản lý cấu hình toàn hệ thống.",
+    "loading": "Đang tải cài đặt...",
+    "groupSuffix": "Cấu hình",
+    "loadError": "Không thể tải cài đặt",
+    "updateSuccess": "Cập nhật cài đặt thành công",
+    "updateError": "Lỗi khi cập nhật cài đặt",
+    "true": "Bật",
+    "false": "Tắt",
+    "groups": {
+      "general": "Chung",
+      "delivery": "Vận chuyển",
+      "inventory": "Tồn kho",
+      "disposal": "Hủy hàng"
+    },
+    "keys": {
+      "company.name": {
+        "label": "Tên công ty",
+        "desc": "Tên công ty hiển thị trên hệ thống và báo cáo"
+      },
+      "delivery.sla.corporate": {
+        "label": "SLA Khách hàng doanh nghiệp (Ngày)",
+        "desc": "Thời gian giao hàng cam kết cho khách hàng doanh nghiệp"
+      },
+      "delivery.sla.individual": {
+        "label": "SLA Khách hàng cá nhân (Ngày)",
+        "desc": "Thời gian giao hàng cam kết cho khách hàng cá nhân"
+      },
+      "delivery.limit.corporate": {
+        "label": "Giới hạn đặt hàng (Doanh nghiệp)",
+        "desc": "Số lượng tối đa mỗi đơn hàng cho khách doanh nghiệp"
+      },
+      "delivery.limit.individual": {
+        "label": "Giới hạn đặt hàng (Cá nhân)",
+        "desc": "Số lượng tối đa mỗi đơn hàng cho khách cá nhân"
+      },
+      "inventory.low_stock_threshold": {
+        "label": "Ngưỡng cảnh báo tồn kho thấp",
+        "desc": "Hệ thống sẽ cảnh báo khi số lượng tồn kho dưới mức này (nếu không có cấu hình riêng cho sản phẩm)"
+      },
+      "disposal.approval_threshold": {
+        "label": "Ngưỡng duyệt hủy hàng (VND)",
+        "desc": "Giá trị đơn hủy hàng cần phê duyệt cấp 2"
+      }
+    }
+  },
+  "notifications": {
+    "saved": "Đã lưu thành công",
+    "updated": "Đã cập nhật",
+    "deleted": "Đã xóa",
+    "statusChanged": "Đã cập nhật trạng thái"
+  },
+  "users": {
+    "title": "Quản lý người dùng",
+    "description": "Quản lý tài khoản, phân quyền và cấp phép truy cập",
+    "create": "Thêm tài khoản",
+    "edit": "Cập nhật tài khoản",
+    "deleteConfirm": "Bạn có chắc muốn xóa tài khoản này?",
+    "deleteSuccess": "Xóa tài khoản thành công",
+    "createSuccess": "Tạo tài khoản thành công",
+    "updateSuccess": "Cập nhật thành công",
+    "loadError": "Không thể tải danh sách người dùng",
+    "deleteError": "Không thể xóa tài khoản",
+    "validation": {
+      "required": "Vui lòng điền đầy đủ thông tin",
+      "passwordRequired": "Vui lòng nhập mật khẩu",
+      "passwordMin": "Tối thiểu 8 ký tự"
+    },
+    "fields": {
+      "fullName": "Họ và tên",
+      "email": "Email",
+      "role": "Phân quyền",
+      "status": "Trạng thái",
+      "password": "Mật khẩu",
+      "newPassword": "Mật khẩu mới (Để trống nếu không đổi)",
+      "isActive": "Kích hoạt tài khoản",
+      "createdAt": "Ngày tạo"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Đã khóa"
+    }
+  },
+  "pdf": {
+    "title": "Xuất báo cáo PDF",
+    "description": "Kiểm tra tính năng xuất PDF với font tiếng Việt.",
+    "productList": "Danh sách sản phẩm",
+    "realData": "Dữ liệu thực tế từ hệ thống",
+    "testData": "Dữ liệu mẫu (Test)",
+    "testDesc": "Để kiểm tra font chữ unicode",
+    "from": "Từ",
+    "to": "Đến",
+    "loading": "Đang tải dữ liệu...",
+    "noData": "Không có dữ liệu trong khoảng thời gian này",
+    "showing": "Hiển thị {{count}} / {{total}} dòng",
+    "sampleReport": "Báo cáo mẫu",
+    "columns": {
+      "sku": "Mã SKU",
+      "name": "Tên sản phẩm",
+      "category": "Danh mục",
+      "unit": "Đơn vị",
+      "priceOut": "Giá bán",
+      "createdAt": "Ngày tạo"
+    }
+  }
+}

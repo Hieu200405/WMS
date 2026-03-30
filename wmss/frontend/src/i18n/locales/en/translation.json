@@ -1,0 +1,639 @@
+{
+  "app": {
+    "title": "Warehouse Management System",
+    "language": "Language",
+    "logout": "Sign out",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "search": "Search...",
+    "create": "Create",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "status": "Status",
+    "filter": "Filter",
+    "actions": "Actions",
+    "total": "Total",
+    "lineItems": "Lines",
+    "exportPdf": "Export PDF",
+    "reset": "Reset demo data",
+    "sku": "SKU",
+    "isActive": "Active",
+    "notActive": "Inactive",
+    "exportExcel": "Export Excel",
+    "close": "Close",
+    "details": "Details",
+    "approve": "Approve",
+    "reject": "Reject",
+    "complete": "Complete"
+  },
+  "auth": {
+    "invalid": "Invalid email or password",
+    "locked": "Your account has been locked. Please contact administrator."
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "categories": "Categories",
+    "suppliers": "Suppliers",
+    "customers": "Customers",
+    "warehouse": "Warehouse",
+    "inventory": "Inventory",
+    "receipts": "Receipts",
+    "deliveries": "Deliveries",
+    "incidents": "Incidents",
+    "stocktaking": "Stocktaking",
+    "adjustments": "Adjustments",
+    "returns": "Returns",
+    "disposals": "Disposals",
+    "reports": "Reports",
+    "financials": "Financials",
+    "pdfTest": "PDF Files",
+    "users": "Users",
+    "scanner": "Scanner",
+    "audit": "Audit Log",
+    "settings": "Settings"
+  },
+  "audit": {
+    "title": "Audit Log",
+    "description": "Track full history of system changes",
+    "time": "Time",
+    "actor": "Actor",
+    "action": "Action",
+    "entity": "Entity",
+    "details": "Change Details",
+    "filter": {
+      "entity": "Entity Type",
+      "timeRange": "Time Range",
+      "startDate": "From Date",
+      "endDate": "To Date",
+      "searchPlaceholder": "Search by user or content..."
+    },
+    "actions": {
+      "create": "Create",
+      "created": "Created",
+      "update": "Update",
+      "updated": "Updated",
+      "delete": "Delete",
+      "deleted": "Deleted",
+      "login": "Login",
+      "logout": "Logout",
+      "approve": "Approve",
+      "approved": "Approved",
+      "reject": "Reject",
+      "rejected": "Rejected",
+      "confirms": "Confirm",
+      "confirmed": "Confirmed",
+      "cancel": "Cancel",
+      "cancelled": "Cancelled",
+      "complete": "Complete",
+      "completed": "Completed",
+      "import": "Import",
+      "export": "Export",
+      "setting.updated": "Config Updated"
+    },
+    "entities": {
+      "Product": "Product",
+      "Category": "Category",
+      "Partner": "Partner",
+      "Receipt": "Receipt",
+      "Delivery": "Delivery",
+      "Inventory": "Inventory",
+      "User": "User",
+      "Setting": "Setting",
+      "Incident": "Incident",
+      "Stocktake": "Stocktake",
+      "Return": "Return",
+      "Disposal": "Disposal"
+    }
+  },
+  "login": {
+    "title": "Sign in",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Login",
+    "remember": "Remember me",
+    "hint": "Demo accounts: admin/admin123, manager/manager123, staff/staff123"
+  },
+  "roles": {
+    "Admin": "Admin",
+    "Manager": "Manager",
+    "Staff": "Staff"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}!",
+    "todayPending": "Today warehouse has <1>{{count}}</1> pending operations.",
+    "cards": {
+      "inventoryValue": "Inventory Value",
+      "pendingReceipts": "Pending Receipts",
+      "pendingDeliveries": "Pending Deliveries",
+      "incidents": "Open Incidents"
+    },
+    "metrics": {
+      "inventoryValue": "Inventory Value",
+      "pendingReceipts": "Pending Inbound",
+      "pendingDeliveries": "Pending Outbound",
+      "openIncidents": "Open Incidents",
+      "expiringSoon": "Expiring Soon"
+    },
+    "trends": {
+      "vsLastMonth": "+12% vs last month",
+      "priority": "Priority",
+      "today": "Today",
+      "urgent": "Urgent",
+      "lessThan30Days": "< 30 days"
+    },
+    "performance": "Operational Performance",
+    "revenueCostLast6Months": "Revenue & Cost (Last 6 months)",
+    "revenue": "Revenue",
+    "expense": "Expense",
+    "inventoryStatus": "Inventory Status",
+    "allocationRatio": "Product Allocation Ratio",
+    "aiInsights": "AI Insights: Stockout Forecast",
+    "aiDescription": "Based on actual sales velocity in last 30 days",
+    "stockoutChance": "Stockout risk:",
+    "inDays": "In {{days}} days",
+    "planRestock": "Plan Restock",
+    "recentActivities": "Recent activities",
+    "noData": "No report data available"
+  },
+  "warehouse": {
+    "title": "Warehouse structure",
+    "addNode": "Add node",
+    "editNode": "Edit node",
+    "barcode": "Location barcode",
+    "type": "Level",
+    "name": "Name",
+    "code": "Code",
+    "subtitle": "Scan barcode to jump to location instantly.",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "title2": "Hierarchical structure",
+    "subtitle2": "Expand branches to view child locations.",
+    "mapView": "Map view",
+    "addChild": "Add child"
+  },
+  "products": {
+    "title": "Products",
+    "sku": "SKU",
+    "name": "Product name",
+    "unit": "Unit",
+    "priceIn": "Purchase price",
+    "priceOut": "Selling price",
+    "category": "Category",
+    "create": "Add product",
+    "categoryFilter": "Filter by category",
+    "allCategories": "All categories",
+    "printLabel": "Print label"
+  },
+  "categories": {
+    "title": "Categories",
+    "create": "Add category",
+    "description": "Description"
+  },
+  "partners": {
+    "suppliers": "Suppliers",
+    "customers": "Customers",
+    "suppliername": "Supplier name",
+    "contact": "Contact",
+    "businessType": "Business type",
+    "businessTypes": {
+      "manufacturer": "Manufacturer",
+      "distributor": "Distributor",
+      "retailer": "Retailer"
+    },
+    "manufacturer": "Manufacturer",
+    "distributor": "Distributor",
+    "retailer": "Retailer",
+    "individual": "Individual",
+    "company": "Company",
+    "subtitle": "Manage supplier list and contact information.",
+    "customername": "Customer name",
+    "customerType": "Customer type",
+    "customerTypes": {
+      "individual": "Individual",
+      "corporate": "Corporate"
+    },
+    "creditLimit": "Credit limit",
+    "paymentTerm": "Payment term",
+    "paymentTerms": {
+      "cod": "Cash on delivery (COD)",
+      "net15": "Net 15",
+      "net30": "Net 30",
+      "prepaid": "Prepaid"
+    },
+    "customerSubtitle": "Manage customer list and credit limits."
+  },
+  "inventory": {
+    "subtitle": "Track detailed stock levels and storage locations.",
+    "quantity": "Quantity in stock",
+    "product": "Product",
+    "location": "Location",
+    "batch": "Batch",
+    "viewLocation": "View location",
+    "allCategories": "All categories",
+    "checkSmart": "Smart check",
+    "locationList": "Location List",
+    "noLocation": "No location exists",
+    "expiry": "Exp",
+    "messages": {
+      "checking": "Checking inventory...",
+      "sufficient": "Inventory sufficient, no replenishment needed.",
+      "checkError": "Check error",
+      "createSuccess": "Successfully created {{count}} draft receipts!",
+      "createError": "Creation error"
+    }
+  },
+  "receipts": {
+    "title": "Inbound receipts",
+    "create": "Create receipt",
+    "supplier": "Supplier",
+    "date": "Receipt date",
+    "status": {
+      "Draft": "Draft",
+      "Approved": "Approved",
+      "Supplier Confirmed": "Supplier confirmed",
+      "Completed": "Completed",
+      "Rejected": "Rejected"
+    },
+    "hasShortage": "Short shipped",
+    "shortageNote": "Shortage note",
+    "damageNote": "Damage note",
+    "approve": "Approve",
+    "complete": "Complete",
+    "confirmSupplier": "Supplier confirmed",
+    "lines": {
+      "product": "Product",
+      "quantity": "Quantity",
+      "price": "Price"
+    },
+    "errors": {
+      "selectSupplier": "Please select a supplier",
+      "addProduct": "Please add at least one product",
+      "createError": "Error creating receipt",
+      "updateError": "Error updating status",
+      "loadError": "Failed to load receipts data",
+      "exportError": "Failed to export receipts"
+    },
+    "detail": "Detail",
+    "description": "Manage inbound receipts and lifecycle transitions.",
+    "exportExcel": "Export Excel",
+    "autoCode": "Code (Auto)",
+    "selectSupplierPlaceholder": "Select supplier",
+    "note": "Note",
+    "rejectTitle": "Reject Receipt",
+    "reject": "Reject",
+    "rejectDescription": "You can add a note for rejection reason.",
+    "noteOptional": "Note (optional)",
+    "rejectPlaceholder": "Ex: Wrong supplier, wrong price...",
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "supplierConfirm": "Supplier Confirmed",
+      "complete": "Complete"
+    },
+    "subtitle": "Manage inbound receipts and lifecycle transitions.",
+    "supplierConfirm": "Supplier confirmed"
+  },
+  "deliveries": {
+    "title": "Outbound deliveries",
+    "create": "Create delivery",
+    "customer": "Customer",
+    "date": "Delivery date",
+    "expectedDate": "Expected delivery date",
+    "status": {
+      "Draft": "Draft",
+      "Approved": "Approved",
+      "Prepared": "Prepared",
+      "Delivered": "Delivered",
+      "Completed": "Completed",
+      "Cancelled": "Cancelled"
+    },
+    "prepare": "Prepare",
+    "deliver": "Deliver",
+    "complete": "Complete",
+    "deliveryNote": "Delivery note",
+    "subtitle": "Monitor delivery statuses and stock availability."
+  },
+  "incidents": {
+    "title": "Incident tickets",
+    "subtitle": "Log shortages, damages, late deliveries or customer refusals and capture the follow-up action.",
+    "type": "Type",
+    "selectType": "Select incident type",
+    "refType": "Reference type",
+    "refId": "Reference id",
+    "date": "Date",
+    "product": "Product",
+    "productPlaceholder": "Select product",
+    "quantity": "Quantity",
+    "note": "Description",
+    "action": "Action plan",
+    "create": "Log incident",
+    "typePlaceholder": "Select incident type",
+    "actionPlaceholder": "Select follow-up action",
+    "refPlaceholder": "Receipt or delivery code",
+    "addLine": "Add product line",
+    "removeLine": "Remove line",
+    "refTypes": {
+      "receipt": "Receipt",
+      "delivery": "Delivery"
+    },
+    "types": {
+      "shortage": "Shortage",
+      "late": "Late delivery",
+      "damaged": "Damaged",
+      "rejected": "Rejected"
+    },
+    "actions": {
+      "replenish": "Replenish",
+      "return": "Return",
+      "refund": "Refund"
+    },
+    "statusValues": {
+      "open": "Open",
+      "inProgress": "In progress",
+      "resolved": "Resolved"
+    }
+  },
+  "stocktaking": {
+    "title": "Stocktaking",
+    "subtitle": "Conduct periodic stocktakes to ensure inventory accuracy.",
+    "create": "Create stocktake",
+    "adjustments": "Adjustments",
+    "difference": "Difference",
+    "apply": "Apply stock",
+    "approve": "Approve stocktake",
+    "approvedBy": "Approved by",
+    "approvedAt": "Approved at",
+    "minutes": "Minutes",
+    "attachments": "Attachments",
+    "minutesPlaceholder": "Approval minutes or notes",
+    "attachmentsPlaceholder": "Attachment URLs, comma-separated",
+    "items": "Items"
+  },
+  "adjustments": {
+    "title": "Inventory Adjustments",
+    "subtitle": "Record manual corrections to inventory by location.",
+    "create": "Create adjustment",
+    "code": "Code",
+    "reason": "Reason",
+    "lines": "Lines",
+    "approvedAt": "Approved at",
+    "addLine": "Add line",
+    "product": "Product",
+    "location": "Location",
+    "batch": "Batch",
+    "delta": "Delta",
+    "selectProduct": "Select product",
+    "selectLocation": "Select location",
+    "selectBatch": "Select batch",
+    "noBatch": "No batch",
+    "reasons": {
+      "loss": "Loss",
+      "mismatch": "Mismatch",
+      "damaged": "Damaged",
+      "stocktakeError": "Stocktake error"
+    }
+  },
+  "returns": {
+    "title": "Return orders",
+    "create": "Create return",
+    "reason": "Reason",
+    "status": {
+      "Awaiting Inspection": "Awaiting inspection",
+      "Restocked": "Restocked",
+      "Disposed": "Moved to disposal"
+    },
+    "subtitle": "Capture customer returns and decide whether to restock or dispose.",
+    "from": "Customer",
+    "items": "Items"
+  },
+  "disposals": {
+    "title": "Disposals",
+    "create": "Create disposal",
+    "council": "Disposal council",
+    "attachment": "Disposal report",
+    "reason": "Disposal reason",
+    "reasons": {
+      "expired": "Expired",
+      "damaged": "Damaged",
+      "lost": "Lost"
+    },
+    "subtitle": "Dispose expired, damaged, or lost stock after manager approval."
+  },
+  "reports": {
+    "title": "Reports",
+    "inventory": "Inventory",
+    "receipts": "Inbound",
+    "deliveries": "Outbound",
+    "stocktaking": "Adjustments",
+    "financials": "Financials",
+    "filter": {
+      "dateRange": "Filter by Date Range",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply",
+      "clear": "Clear Filter"
+    },
+    "stats": {
+      "totalInventoryValue": "Total Inventory Value",
+      "products": "Products",
+      "pendingReceipts": "Pending Receipts",
+      "pendingDeliveries": "Pending Deliveries",
+      "totalSkus": "Total SKUs",
+      "lowStock": "Low Stock",
+      "outOfStock": "Out of Stock",
+      "stockValue": "Stock Value (Est)",
+      "inboundVolume": "Inbound Volume",
+      "pending": "Pending",
+      "completed": "Completed",
+      "avgProcessingTime": "Avg Processing Time",
+      "outboundVolume": "Outbound Volume",
+      "onTimeDelivery": "On-time Delivery",
+      "totalStocktakes": "Total Stocktakes",
+      "accuracyRate": "Accuracy Rate",
+      "netAdjustments": "Net Adjustments",
+      "discrepancyRate": "Discrepancy Rate",
+      "totalReceipts": "Total Receipts",
+      "totalDeliveries": "Total Deliveries"
+    },
+    "charts": {
+      "revenueVsExpenses": "Revenue vs Expenses (6 Months)",
+      "inventoryStatus": "Inventory Status",
+      "stockDistribution": "Stock Distribution by Category",
+      "topProducts": "Top 5 Products by Value",
+      "monthlyInbound": "Monthly Inbound",
+      "monthlyOutbound": "Monthly Outbound",
+      "deliveryStatus": "Delivery Status",
+      "accuracyTrend": "Inventory Accuracy Trend"
+    },
+    "common": {
+      "noData": "No report data available",
+      "downloadCompleted": "Download completed",
+      "downloadFailed": "Download failed",
+      "refresh": "Refresh",
+      "exportPdf": "Export PDF",
+      "revenue": "Revenue",
+      "expenses": "Expenses",
+      "available": "Available",
+      "allocated": "Allocated",
+      "reserved": "Reserved",
+      "quarantined": "Quarantined/Inspecting",
+      "volume": "Volume",
+      "value": "Value",
+      "orders": "Orders"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "inventoryLevel": "Inventory Level",
+      "inbound": "Inbound",
+      "outbound": "Outbound",
+      "stocktakeAccuracy": "Stocktake Accuracy"
+    }
+  },
+  "financials": {
+    "title": "Financial Management",
+    "transactions": "Transaction history",
+    "amount": "Amount",
+    "balance": "Balance",
+    "type": "Type",
+    "payment": "Payment",
+    "liability": "Liability",
+    "refund": "Refund",
+    "reference": "Reference",
+    "date": "Date",
+    "partner": "Partner",
+    "createPayment": "Record payment",
+    "debtAmount": "Debt amount",
+    "receivable": "Receivable",
+    "payable": "Payable",
+    "totalReceivable": "Total Receivable",
+    "totalPayable": "Total Payable",
+    "overdueCount": "Overdue Debts",
+    "totalCollected": "Total Collected (Period)",
+    "totalPaidInPeriod": "Total Paid (Period)",
+    "payNow": "Pay",
+    "collectNow": "Collect",
+    "quickPayAmount": "Payment Amount",
+    "id": "Transaction ID",
+    "relatedReceipt": "Related Receipt",
+    "paidAmount": "Paid",
+    "paymentDueDate": "Due Date",
+    "status": "Status",
+    "overdueDays": "Overdue {{days}} days",
+    "filterOverdue": "Overdue only",
+    "filterUnpaid": "Unpaid only",
+    "debtSummary": "Debt Summary",
+    "debtCount": "Debt Count",
+    "overdueReceipts": "Overdue Receipts"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage system-wide configurations.",
+    "loading": "Loading settings...",
+    "groupSuffix": "Configuration",
+    "loadError": "Failed to load settings",
+    "updateSuccess": "Setting updated",
+    "updateError": "Failed to update setting",
+    "true": "True",
+    "false": "False",
+    "groups": {
+      "general": "General",
+      "delivery": "Delivery",
+      "inventory": "Inventory",
+      "disposal": "Disposal"
+    },
+    "keys": {
+      "company.name": {
+        "label": "Company Name",
+        "desc": "Company name displayed on system and reports"
+      },
+      "delivery.sla.corporate": {
+        "label": "SLA Corporate Customers (Days)",
+        "desc": "Committed delivery time for corporate customers"
+      },
+      "delivery.sla.individual": {
+        "label": "SLA Individual Customers (Days)",
+        "desc": "Committed delivery time for individual customers"
+      },
+      "delivery.limit.corporate": {
+        "label": "Order Limit (Corporate)",
+        "desc": "Maximum quantity per order for corporate customers"
+      },
+      "delivery.limit.individual": {
+        "label": "Order Limit (Individual)",
+        "desc": "Maximum quantity per order for individual customers"
+      },
+      "inventory.low_stock_threshold": {
+        "label": "Low Stock Threshold",
+        "desc": "System warns when inventory drops below this level (if no product specific config)"
+      },
+      "disposal.approval_threshold": {
+        "label": "Disposal Approval Threshold (VND)",
+        "desc": "Disposal value requiring level 2 approval"
+      }
+    }
+  },
+  "notifications": {
+    "saved": "Saved successfully",
+    "updated": "Updated",
+    "deleted": "Deleted",
+    "statusChanged": "Status updated"
+  },
+  "users": {
+    "title": "User Management",
+    "description": "Manage user accounts, roles and access permissions",
+    "create": "Add User",
+    "edit": "Edit User",
+    "deleteConfirm": "Are you sure you want to delete this account?",
+    "deleteSuccess": "Account deleted successfully",
+    "createSuccess": "Account created successfully",
+    "updateSuccess": "Update successful",
+    "loadError": "Failed to load users",
+    "deleteError": "Failed to delete account",
+    "validation": {
+      "required": "Please fill in all required fields",
+      "passwordRequired": "Please enter password",
+      "passwordMin": "Minimum 8 characters"
+    },
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "password": "Password",
+      "newPassword": "New Password (Leave blank if not changing)",
+      "isActive": "Active Account",
+      "createdAt": "Created At"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  },
+  "pdf": {
+    "title": "PDF Report Export",
+    "description": "Test PDF export feature with unicode fonts.",
+    "productList": "Product List",
+    "realData": "Real data from system",
+    "testData": "Sample Data (Test)",
+    "testDesc": "To check unicode font rendering",
+    "from": "From",
+    "to": "To",
+    "loading": "Loading data...",
+    "noData": "No data available for this period",
+    "showing": "Showing {{count}} / {{total}} rows",
+    "sampleReport": "Sample Report",
+    "columns": {
+      "sku": "SKU",
+      "name": "Product Name",
+      "category": "Category",
+      "unit": "Unit",
+      "priceOut": "Selling Price",
+      "createdAt": "Created At"
+    }
+  }
+}
