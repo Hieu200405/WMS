@@ -1,0 +1,3915 @@
+openapi: 3.1.0
+info:
+  title: WMS API
+  version: 1.0.0
+  description: |
+    Warehouse management system API covering authentication, master data, inventory, and operations.
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Local development
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ObjectId:
+      type: string
+      pattern: '^[0-9a-fA-F]{24}$'
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              nullable: true
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+    UserRole:
+      type: string
+      enum: [Admin, Manager, Staff]
+    PartnerType:
+      type: string
+      enum: [supplier, customer]
+    WarehouseNodeType:
+      type: string
+      enum: [warehouse, zone, aisle, rack, bin]
+    ReceiptStatus:
+      type: string
+      enum: [draft, approved, supplierConfirmed, completed, rejected]
+    DeliveryStatus:
+      type: string
+      enum: [draft, approved, prepared, delivered, completed, cancelled]
+    StocktakeStatus:
+      type: string
+      enum: [draft, approved, applied]
+    ReturnStatus:
+      type: string
+      enum: [draft, approved, inspected, completed]
+    DisposalStatus:
+      type: string
+      enum: [draft, approved, completed]
+    IncidentType:
+      type: string
+      enum: [shortage, late, damaged, rejected]
+    IncidentAction:
+      type: string
+      enum: [replenish, return, refund]
+    IncidentStatus:
+      type: string
+      enum: [open, inProgress, resolved]
+    AdjustmentReason:
+      type: string
+      enum: [loss, found, correction]
+    FinancialTransactionType:
+      type: string
+      enum: [payment, liability, refund, income, expense]
+    FinancialTransactionStatus:
+      type: string
+      enum: [pending, completed, cancelled]
+    InventoryStatus:
+      type: string
+      enum: [available, reserved, pending, special, quarantined]
+    NotificationType:
+      type: string
+      enum: [info, success, warning, error]
+    User:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        email:
+          type: string
+          format: email
+        fullName:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    UserRef:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        email:
+          type: string
+          format: email
+        fullName:
+          type: string
+    AuthTokens:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+    Category:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    PartnerRef:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        name:
+          type: string
+        code:
+          type: string
+        type:
+          $ref: '#/components/schemas/PartnerType'
+    ProductRef:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        sku:
+          type: string
+        name:
+          type: string
+        unit:
+          type: string
+    Product:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        sku:
+          type: string
+        name:
+          type: string
+        categoryId:
+          $ref: '#/components/schemas/ObjectId'
+        category:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ObjectId'
+            name:
+              type: string
+              nullable: true
+          nullable: true
+        unit:
+          type: string
+        priceIn:
+          type: number
+        priceOut:
+          type: number
+        minStock:
+          type: number
+        image:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        supplierIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObjectId'
+        manageBySerial:
+          type: boolean
+        requiresQC:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Partner:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        type:
+          $ref: '#/components/schemas/PartnerType'
+        code:
+          type: string
+        name:
+          type: string
+        taxCode:
+          type: string
+          nullable: true
+        contact:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+        businessType:
+          type: string
+          nullable: true
+        customerType:
+          type: string
+          nullable: true
+        creditLimit:
+          type: number
+          nullable: true
+        paymentTerm:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    SupplierProduct:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        supplierId:
+          anyOf:
+            - $ref: '#/components/schemas/ObjectId'
+            - $ref: '#/components/schemas/PartnerRef'
+        productId:
+          anyOf:
+            - $ref: '#/components/schemas/ObjectId'
+            - $ref: '#/components/schemas/ProductRef'
+        supplierSku:
+          type: string
+          nullable: true
+        priceIn:
+          type: number
+          nullable: true
+        currency:
+          type: string
+        minOrderQty:
+          type: number
+        leadTimeDays:
+          type: number
+          nullable: true
+        paymentTerms:
+          type: string
+          nullable: true
+        contractRef:
+          type: string
+          nullable: true
+        isPreferred:
+          type: boolean
+        status:
+          type: string
+          enum: [active, inactive]
+        validFrom:
+          type: string
+          format: date-time
+          nullable: true
+        validTo:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    WarehouseNode:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        type:
+          $ref: '#/components/schemas/WarehouseNodeType'
+        name:
+          type: string
+        code:
+          type: string
+        parentId:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        barcode:
+          type: string
+          nullable: true
+        warehouseType:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        province:
+          type: string
+          nullable: true
+        lat:
+          type: number
+          nullable: true
+        lng:
+          type: number
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        capacity:
+          type: number
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    WarehouseTreeNode:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        type:
+          $ref: '#/components/schemas/WarehouseNodeType'
+        name:
+          type: string
+        code:
+          type: string
+        barcode:
+          type: string
+          nullable: true
+        warehouseType:
+          type: string
+          nullable: true
+        parentId:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        province:
+          type: string
+          nullable: true
+        lat:
+          type: number
+          nullable: true
+        lng:
+          type: number
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/WarehouseTreeNode'
+    WarehouseVisualization:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        type:
+          $ref: '#/components/schemas/WarehouseNodeType'
+        name:
+          type: string
+        code:
+          type: string
+        children:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/ObjectId'
+              type:
+                $ref: '#/components/schemas/WarehouseNodeType'
+              name:
+                type: string
+              code:
+                type: string
+              currentQty:
+                type: number
+              itemsCount:
+                type: integer
+              utilization:
+                type: number
+    InventoryItem:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        locationId:
+          $ref: '#/components/schemas/ObjectId'
+        quantity:
+          type: integer
+        status:
+          $ref: '#/components/schemas/InventoryStatus'
+        batch:
+          type: string
+          nullable: true
+        expDate:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+    InventoryMoveRequest:
+      type: object
+      required: [productId, fromLocation, toLocation, qty]
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        fromLocation:
+          $ref: '#/components/schemas/ObjectId'
+        toLocation:
+          $ref: '#/components/schemas/ObjectId'
+        qty:
+          type: integer
+          minimum: 1
+    InventoryReleaseQcRequest:
+      type: object
+      required: [productId, locationId, qty]
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        locationId:
+          $ref: '#/components/schemas/ObjectId'
+        qty:
+          type: integer
+          minimum: 1
+        batch:
+          type: string
+          nullable: true
+    ReplenishmentLine:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        sku:
+          type: string
+        name:
+          type: string
+        currentStock:
+          type: number
+        minStock:
+          type: number
+        suggestedQty:
+          type: number
+        priceIn:
+          type: number
+    ReplenishmentSuggestion:
+      type: object
+      properties:
+        supplierId:
+          $ref: '#/components/schemas/ObjectId'
+        supplierName:
+          type: string
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplenishmentLine'
+    ReceiptLine:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        qty:
+          type: number
+        priceIn:
+          type: number
+        locationId:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        batch:
+          type: string
+          nullable: true
+        expDate:
+          type: string
+          format: date-time
+          nullable: true
+        serials:
+          type: array
+          items:
+            type: string
+    Receipt:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        code:
+          type: string
+        supplierId:
+          $ref: '#/components/schemas/ObjectId'
+        supplier:
+          $ref: '#/components/schemas/PartnerRef'
+        date:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/ReceiptStatus'
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReceiptLine'
+        notes:
+          type: string
+          nullable: true
+        attachments:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    DeliveryLine:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        qty:
+          type: number
+        priceOut:
+          type: number
+        locationId:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        serials:
+          type: array
+          items:
+            type: string
+        batch:
+          type: string
+          nullable: true
+    Delivery:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        code:
+          type: string
+        customerId:
+          $ref: '#/components/schemas/ObjectId'
+        customer:
+          $ref: '#/components/schemas/PartnerRef'
+        date:
+          type: string
+          format: date-time
+        expectedDate:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/DeliveryStatus'
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeliveryLine'
+        notes:
+          type: string
+          nullable: true
+        carrier:
+          type: string
+          nullable: true
+        trackingNumber:
+          type: string
+          nullable: true
+        shippingFee:
+          type: number
+          nullable: true
+        codAmount:
+          type: number
+          nullable: true
+        weight:
+          type: number
+          nullable: true
+        dimensions:
+          type: object
+          properties:
+            l:
+              type: number
+            w:
+              type: number
+            h:
+              type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    IncidentLine:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        quantity:
+          type: integer
+    Incident:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        type:
+          $ref: '#/components/schemas/IncidentType'
+        refType:
+          type: string
+          enum: [receipt, delivery]
+        refId:
+          $ref: '#/components/schemas/ObjectId'
+        status:
+          $ref: '#/components/schemas/IncidentStatus'
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentLine'
+        note:
+          type: string
+          nullable: true
+        action:
+          $ref: '#/components/schemas/IncidentAction'
+        createdBy:
+          $ref: '#/components/schemas/ObjectId'
+        createdAt:
+          type: string
+          format: date-time
+    StocktakeItem:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        locationId:
+          $ref: '#/components/schemas/ObjectId'
+        systemQty:
+          type: number
+          nullable: true
+        countedQty:
+          type: number
+        serials:
+          type: array
+          items:
+            type: string
+    Stocktake:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        code:
+          type: string
+        date:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/StocktakeStatus'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StocktakeItem'
+        adjustmentId:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        approvedBy:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        approvedAt:
+          type: string
+          format: date-time
+          nullable: true
+        minutes:
+          type: string
+          nullable: true
+        attachments:
+          type: array
+          items:
+            type: string
+    AdjustmentLine:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        locationId:
+          $ref: '#/components/schemas/ObjectId'
+        delta:
+          type: integer
+    Adjustment:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        code:
+          type: string
+        reason:
+          $ref: '#/components/schemas/AdjustmentReason'
+        status:
+          type: string
+          enum: [draft, completed]
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdjustmentLine'
+        approvedBy:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        approvedAt:
+          type: string
+          format: date-time
+          nullable: true
+    ReturnItem:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        qty:
+          type: number
+        reason:
+          type: string
+        expDate:
+          type: string
+          format: date-time
+          nullable: true
+        qcStatus:
+          type: string
+          enum: [pending, approved, rejected]
+          nullable: true
+        qcNotes:
+          type: string
+          nullable: true
+        restockQty:
+          type: number
+          nullable: true
+        disposeQty:
+          type: number
+          nullable: true
+    Return:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        code:
+          type: string
+        from:
+          type: string
+          enum: [customer, supplier]
+        refId:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        disposalId:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReturnItem'
+        status:
+          $ref: '#/components/schemas/ReturnStatus'
+        qcInspectedBy:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        qcInspectedAt:
+          type: string
+          format: date-time
+          nullable: true
+        qcNotes:
+          type: string
+          nullable: true
+        adjustmentId:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        refundTransactionId:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    DisposalItem:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        locationId:
+          $ref: '#/components/schemas/ObjectId'
+        qty:
+          type: number
+        value:
+          type: number
+          nullable: true
+    Disposal:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        code:
+          type: string
+        reason:
+          type: string
+        totalValue:
+          type: number
+        boardRequired:
+          type: boolean
+        boardMembers:
+          type: array
+          items:
+            type: string
+        minutesFileUrl:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/DisposalStatus'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisposalItem'
+        approvedBy:
+          $ref: '#/components/schemas/ObjectId'
+          nullable: true
+        approvedAt:
+          type: string
+          format: date-time
+          nullable: true
+        approvalNotes:
+          type: string
+          nullable: true
+        attachments:
+          type: array
+          items:
+            type: string
+        photos:
+          type: array
+          items:
+            type: string
+    FinancialTransaction:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        partnerId:
+          anyOf:
+            - $ref: '#/components/schemas/ObjectId'
+            - $ref: '#/components/schemas/PartnerRef'
+        type:
+          $ref: '#/components/schemas/FinancialTransactionType'
+        status:
+          $ref: '#/components/schemas/FinancialTransactionStatus'
+        amount:
+          type: number
+        paidAmount:
+          type: number
+          nullable: true
+        paymentDueDate:
+          type: string
+          format: date-time
+          nullable: true
+        referenceId:
+          type: string
+          nullable: true
+        referenceType:
+          type: string
+          enum: [Receipt, Delivery, Return, Manual]
+          nullable: true
+        date:
+          type: string
+          format: date-time
+        note:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+    Notification:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        userId:
+          $ref: '#/components/schemas/ObjectId'
+        type:
+          $ref: '#/components/schemas/NotificationType'
+        title:
+          type: string
+        message:
+          type: string
+        isRead:
+          type: boolean
+        actionLink:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Setting:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+            - type: object
+            - type: array
+        type:
+          type: string
+          enum: [string, number, boolean, json]
+        group:
+          type: string
+        description:
+          type: string
+          nullable: true
+        isPublic:
+          type: boolean
+        updatedAt:
+          type: string
+          format: date-time
+    AuditLog:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        action:
+          type: string
+        entity:
+          type: string
+        entityId:
+          type: string
+        actor:
+          $ref: '#/components/schemas/UserRef'
+          nullable: true
+        payload:
+          type: object
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+    UploadImageResponse:
+      type: object
+      properties:
+        url:
+          type: string
+        filename:
+          type: string
+        mimetype:
+          type: string
+        size:
+          type: integer
+    AllocationPick:
+      type: object
+      properties:
+        inventoryId:
+          $ref: '#/components/schemas/ObjectId'
+        locationId:
+          $ref: '#/components/schemas/ObjectId'
+        batch:
+          type: string
+          nullable: true
+        expDate:
+          type: string
+          format: date-time
+          nullable: true
+        quantity:
+          type: number
+    AllocationResult:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        picks:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocationPick'
+        totalPicked:
+          type: number
+        error:
+          type: string
+          nullable: true
+    ReportOverview:
+      type: object
+      properties:
+        counts:
+          type: object
+          properties:
+            products:
+              type: integer
+            pendingReceipts:
+              type: integer
+            pendingDeliveries:
+              type: integer
+            openIncidents:
+              type: integer
+            expiringSoon:
+              type: integer
+        totalInventoryValue:
+          type: number
+        revenueChart:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              income:
+                type: number
+              expense:
+                type: number
+        inventoryStatus:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: number
+        abcAnalysis:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: number
+        predictiveInsights:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              sku:
+                type: string
+              daysLeft:
+                type: number
+              velocity:
+                type: string
+    ReportInventoryRow:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ObjectId'
+        sku:
+          type: string
+        name:
+          type: string
+        totalQty:
+          type: number
+        minStock:
+          type: number
+        status:
+          type: string
+    ReportInboundRow:
+      type: object
+      properties:
+        date:
+          type: string
+        totalQty:
+          type: number
+        documents:
+          type: integer
+    ReportOutboundRow:
+      type: object
+      properties:
+        date:
+          type: string
+        totalQty:
+          type: number
+        documents:
+          type: integer
+    ReportStocktakeRow:
+      type: object
+      properties:
+        code:
+          type: string
+        status:
+          type: string
+        date:
+          type: string
+        discrepancies:
+          type: number
+    PagedUsers:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedCategories:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedProducts:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedPartners:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Partner'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedSupplierProducts:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplierProduct'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedWarehouseNodes:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WarehouseNode'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedInventory:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryItem'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedReceipts:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Receipt'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedDeliveries:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Delivery'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedIncidents:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Incident'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedStocktakes:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stocktake'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedAdjustments:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Adjustment'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedReturns:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Return'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedDisposals:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Disposal'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedTransactions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialTransaction'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagedAuditLogs:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLog'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login using email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthTokens'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, fullName, role]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                fullName:
+                  type: string
+                role:
+                  $ref: '#/components/schemas/UserRole'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current user profile
+      responses:
+        '200':
+          description: Profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+  /auth/password:
+    put:
+      tags: [Auth]
+      summary: Update current user password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [currentPass, newPass]
+              properties:
+                currentPass:
+                  type: string
+                newPass:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /users:
+    get:
+      tags: [Users]
+      summary: List users
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedUsers'
+    post:
+      tags: [Users]
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, fullName, role]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                fullName:
+                  type: string
+                role:
+                  $ref: '#/components/schemas/UserRole'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+    put:
+      tags: [Users]
+      summary: Update user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                role:
+                  $ref: '#/components/schemas/UserRole'
+                isActive:
+                  type: boolean
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+    delete:
+      tags: [Users]
+      summary: Delete user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /categories:
+    get:
+      tags: [Categories]
+      summary: List categories
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Category list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCategories'
+    post:
+      tags: [Categories]
+      summary: Create category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, name]
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                isActive:
+                  type: boolean
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Category'
+  /categories/{id}:
+    put:
+      tags: [Categories]
+      summary: Update category
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                isActive:
+                  type: boolean
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Category'
+    delete:
+      tags: [Categories]
+      summary: Delete category
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /products:
+    get:
+      tags: [Products]
+      summary: List products
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: query
+          schema:
+            type: string
+        - in: query
+          name: categoryId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Product list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedProducts'
+    post:
+      tags: [Products]
+      summary: Create product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sku, name, categoryId, unit, priceIn, priceOut, minStock]
+              properties:
+                sku:
+                  type: string
+                name:
+                  type: string
+                categoryId:
+                  $ref: '#/components/schemas/ObjectId'
+                unit:
+                  type: string
+                priceIn:
+                  type: number
+                priceOut:
+                  type: number
+                minStock:
+                  type: number
+                image:
+                  type: string
+                description:
+                  type: string
+                supplierIds:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ObjectId'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
+  /products/{id}:
+    put:
+      tags: [Products]
+      summary: Update product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sku:
+                  type: string
+                name:
+                  type: string
+                categoryId:
+                  $ref: '#/components/schemas/ObjectId'
+                unit:
+                  type: string
+                priceIn:
+                  type: number
+                priceOut:
+                  type: number
+                minStock:
+                  type: number
+                image:
+                  type: string
+                description:
+                  type: string
+                supplierIds:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
+    delete:
+      tags: [Products]
+      summary: Delete product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /supplier-products:
+    get:
+      tags: [SupplierProducts]
+      summary: List supplier-product links
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: productId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - in: query
+          name: supplierId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Supplier-product list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedSupplierProducts'
+    post:
+      tags: [SupplierProducts]
+      summary: Create supplier-product link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [supplierId, productId]
+              properties:
+                supplierId:
+                  $ref: '#/components/schemas/ObjectId'
+                productId:
+                  $ref: '#/components/schemas/ObjectId'
+                supplierSku:
+                  type: string
+                priceIn:
+                  type: number
+                currency:
+                  type: string
+                minOrderQty:
+                  type: number
+                leadTimeDays:
+                  type: number
+                paymentTerms:
+                  type: string
+                isPreferred:
+                  type: boolean
+                status:
+                  type: string
+                  enum: [active, inactive]
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/SupplierProduct'
+  /supplier-products/{id}:
+    put:
+      tags: [SupplierProducts]
+      summary: Update supplier-product link
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                supplierSku:
+                  type: string
+                priceIn:
+                  type: number
+                currency:
+                  type: string
+                minOrderQty:
+                  type: number
+                leadTimeDays:
+                  type: number
+                paymentTerms:
+                  type: string
+                isPreferred:
+                  type: boolean
+                status:
+                  type: string
+                  enum: [active, inactive]
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/SupplierProduct'
+    delete:
+      tags: [SupplierProducts]
+      summary: Delete supplier-product link
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /partners:
+    get:
+      tags: [Partners]
+      summary: List partners
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: query
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            $ref: '#/components/schemas/PartnerType'
+      responses:
+        '200':
+          description: Partner list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedPartners'
+    post:
+      tags: [Partners]
+      summary: Create partner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type, code, name]
+              properties:
+                type:
+                  $ref: '#/components/schemas/PartnerType'
+                code:
+                  type: string
+                name:
+                  type: string
+                taxCode:
+                  type: string
+                contact:
+                  type: string
+                address:
+                  type: string
+                notes:
+                  type: string
+                isActive:
+                  type: boolean
+                businessType:
+                  type: string
+                customerType:
+                  type: string
+                creditLimit:
+                  type: number
+                paymentTerm:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Partner'
+  /partners/{id}:
+    put:
+      tags: [Partners]
+      summary: Update partner
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+                taxCode:
+                  type: string
+                contact:
+                  type: string
+                address:
+                  type: string
+                notes:
+                  type: string
+                isActive:
+                  type: boolean
+                businessType:
+                  type: string
+                customerType:
+                  type: string
+                creditLimit:
+                  type: number
+                paymentTerm:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Partner'
+    delete:
+      tags: [Partners]
+      summary: Delete partner
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /warehouse:
+    get:
+      tags: [Warehouse]
+      summary: List warehouse nodes
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: query
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            $ref: '#/components/schemas/WarehouseNodeType'
+        - in: query
+          name: parentId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Warehouse nodes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedWarehouseNodes'
+    post:
+      tags: [Warehouse]
+      summary: Create warehouse node
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type, name, code]
+              properties:
+                type:
+                  $ref: '#/components/schemas/WarehouseNodeType'
+                name:
+                  type: string
+                code:
+                  type: string
+                parentId:
+                  $ref: '#/components/schemas/ObjectId'
+                barcode:
+                  type: string
+                warehouseType:
+                  type: string
+                address:
+                  type: string
+                city:
+                  type: string
+                province:
+                  type: string
+                lat:
+                  type: number
+                lng:
+                  type: number
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/WarehouseNode'
+  /warehouse/tree:
+    get:
+      tags: [Warehouse]
+      summary: Get warehouse tree
+      responses:
+        '200':
+          description: Warehouse tree
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WarehouseTreeNode'
+  /warehouse/{id}/visualization:
+    get:
+      tags: [Warehouse]
+      summary: Get warehouse visualization
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Visualization
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/WarehouseVisualization'
+  /warehouse/{id}:
+    put:
+      tags: [Warehouse]
+      summary: Update warehouse node
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                barcode:
+                  type: string
+                  nullable: true
+                parentId:
+                  $ref: '#/components/schemas/ObjectId'
+                  nullable: true
+                warehouseType:
+                  type: string
+                  nullable: true
+                address:
+                  type: string
+                city:
+                  type: string
+                province:
+                  type: string
+                lat:
+                  type: number
+                lng:
+                  type: number
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/WarehouseNode'
+    delete:
+      tags: [Warehouse]
+      summary: Delete warehouse node
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /inventory:
+    get:
+      tags: [Inventory]
+      summary: List inventory items
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: productId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - in: query
+          name: locationId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Inventory list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedInventory'
+  /inventory/export:
+    get:
+      tags: [Inventory]
+      summary: Export inventory to Excel
+      parameters:
+        - in: query
+          name: productId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - in: query
+          name: locationId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Excel file
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+  /inventory/replenishment/check:
+    get:
+      tags: [Inventory]
+      summary: Get replenishment suggestions
+      responses:
+        '200':
+          description: Suggestions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReplenishmentSuggestion'
+  /inventory/replenishment/exec:
+    post:
+      tags: [Inventory]
+      summary: Execute replenishment suggestions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [suggestions]
+              properties:
+                suggestions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReplenishmentSuggestion'
+      responses:
+        '200':
+          description: Created receipts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Receipt'
+                  message:
+                    type: string
+  /inventory/move:
+    post:
+      tags: [Inventory]
+      summary: Move inventory between locations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryMoveRequest'
+      responses:
+        '200':
+          description: Inventory moved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+  /inventory/release-qc:
+    post:
+      tags: [Inventory]
+      summary: Release quarantined inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryReleaseQcRequest'
+      responses:
+        '200':
+          description: Released
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+  /receipts:
+    get:
+      tags: [Receipts]
+      summary: List receipts
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/ReceiptStatus'
+        - in: query
+          name: supplierId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Receipt list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedReceipts'
+    post:
+      tags: [Receipts]
+      summary: Create receipt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, supplierId, date, lines]
+              properties:
+                code:
+                  type: string
+                supplierId:
+                  $ref: '#/components/schemas/ObjectId'
+                date:
+                  type: string
+                  format: date-time
+                lines:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReceiptLine'
+                notes:
+                  type: string
+                attachments:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Receipt'
+  /receipts/export:
+    get:
+      tags: [Receipts]
+      summary: Export receipts to Excel
+      parameters:
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/ReceiptStatus'
+        - in: query
+          name: supplierId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Excel file
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+  /receipts/{id}:
+    put:
+      tags: [Receipts]
+      summary: Update receipt
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date-time
+                lines:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReceiptLine'
+                notes:
+                  type: string
+                attachments:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Receipt'
+    delete:
+      tags: [Receipts]
+      summary: Delete receipt
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /receipts/{id}/transition:
+    post:
+      tags: [Receipts]
+      summary: Transition receipt status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to]
+              properties:
+                to:
+                  type: string
+                  enum: [approved, supplierConfirmed, completed, rejected]
+                note:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Receipt'
+  /receipts/{id}/audit-logs:
+    get:
+      tags: [Receipts]
+      summary: Get receipt audit logs
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Audit logs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditLog'
+  /deliveries:
+    get:
+      tags: [Deliveries]
+      summary: List deliveries
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/DeliveryStatus'
+        - in: query
+          name: customerId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delivery list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedDeliveries'
+    post:
+      tags: [Deliveries]
+      summary: Create delivery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, customerId, date, expectedDate, lines]
+              properties:
+                code:
+                  type: string
+                customerId:
+                  $ref: '#/components/schemas/ObjectId'
+                date:
+                  type: string
+                  format: date-time
+                expectedDate:
+                  type: string
+                  format: date-time
+                lines:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DeliveryLine'
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Delivery'
+  /deliveries/export:
+    get:
+      tags: [Deliveries]
+      summary: Export deliveries to Excel
+      parameters:
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/DeliveryStatus'
+        - in: query
+          name: customerId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Excel file
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+  /deliveries/allocate:
+    post:
+      tags: [Deliveries]
+      summary: Allocate inventory for delivery items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [productId, quantity]
+                    properties:
+                      productId:
+                        $ref: '#/components/schemas/ObjectId'
+                      quantity:
+                        type: number
+      responses:
+        '200':
+          description: Allocation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AllocationResult'
+  /deliveries/{id}:
+    put:
+      tags: [Deliveries]
+      summary: Update delivery
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date-time
+                lines:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DeliveryLine'
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Delivery'
+    delete:
+      tags: [Deliveries]
+      summary: Delete delivery
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /deliveries/{id}/transition:
+    post:
+      tags: [Deliveries]
+      summary: Transition delivery status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to]
+              properties:
+                to:
+                  type: string
+                  enum: [approved, prepared, delivered, completed]
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Delivery'
+  /deliveries/{id}/audit-logs:
+    get:
+      tags: [Deliveries]
+      summary: Get delivery audit logs
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Audit logs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditLog'
+  /incidents:
+    get:
+      tags: [Incidents]
+      summary: List incidents
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            $ref: '#/components/schemas/IncidentType'
+        - in: query
+          name: refType
+          schema:
+            type: string
+            enum: [receipt, delivery]
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/IncidentStatus'
+      responses:
+        '200':
+          description: Incident list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedIncidents'
+    post:
+      tags: [Incidents]
+      summary: Create incident
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type, refType, refId, lines, action]
+              properties:
+                type:
+                  $ref: '#/components/schemas/IncidentType'
+                refType:
+                  type: string
+                  enum: [receipt, delivery]
+                refId:
+                  $ref: '#/components/schemas/ObjectId'
+                lines:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/IncidentLine'
+                note:
+                  type: string
+                action:
+                  $ref: '#/components/schemas/IncidentAction'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Incident'
+  /incidents/{id}:
+    put:
+      tags: [Incidents]
+      summary: Update incident
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note:
+                  type: string
+                action:
+                  $ref: '#/components/schemas/IncidentAction'
+                status:
+                  $ref: '#/components/schemas/IncidentStatus'
+                lines:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/IncidentLine'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Incident'
+    delete:
+      tags: [Incidents]
+      summary: Delete incident
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /stocktakes:
+    get:
+      tags: [Stocktakes]
+      summary: List stocktakes
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/StocktakeStatus'
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Stocktake list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedStocktakes'
+    post:
+      tags: [Stocktakes]
+      summary: Create stocktake
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, date, items]
+              properties:
+                code:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/StocktakeItem'
+                minutes:
+                  type: string
+                attachments:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Stocktake'
+  /stocktakes/{id}:
+    put:
+      tags: [Stocktakes]
+      summary: Update stocktake
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date-time
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/StocktakeItem'
+                minutes:
+                  type: string
+                attachments:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Stocktake'
+  /stocktakes/{id}/approve:
+    post:
+      tags: [Stocktakes]
+      summary: Approve stocktake
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                minutes:
+                  type: string
+                attachments:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Approved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Stocktake'
+  /stocktakes/{id}/apply:
+    post:
+      tags: [Stocktakes]
+      summary: Apply stocktake
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Applied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Stocktake'
+  /adjustments:
+    get:
+      tags: [Adjustments]
+      summary: List adjustments
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Adjustment list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedAdjustments'
+    post:
+      tags: [Adjustments]
+      summary: Create adjustment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, reason, lines]
+              properties:
+                code:
+                  type: string
+                reason:
+                  $ref: '#/components/schemas/AdjustmentReason'
+                lines:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AdjustmentLine'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Adjustment'
+  /adjustments/{id}/approve:
+    post:
+      tags: [Adjustments]
+      summary: Approve adjustment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Approved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Adjustment'
+  /adjustments/{id}:
+    delete:
+      tags: [Adjustments]
+      summary: Delete adjustment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /returns:
+    get:
+      tags: [Returns]
+      summary: List returns
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/ReturnStatus'
+        - in: query
+          name: from
+          schema:
+            type: string
+            enum: [customer, supplier]
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Return list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedReturns'
+    post:
+      tags: [Returns]
+      summary: Create return
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, from, items]
+              properties:
+                code:
+                  type: string
+                from:
+                  type: string
+                  enum: [customer, supplier]
+                refId:
+                  $ref: '#/components/schemas/ObjectId'
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReturnItem'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Return'
+  /returns/{id}:
+    put:
+      tags: [Returns]
+      summary: Update return
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReturnItem'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Return'
+    delete:
+      tags: [Returns]
+      summary: Delete return
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /returns/{id}/transition:
+    post:
+      tags: [Returns]
+      summary: Transition return status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to]
+              properties:
+                to:
+                  type: string
+                  enum: [approved, completed]
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Return'
+  /disposals:
+    get:
+      tags: [Disposals]
+      summary: List disposals
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/DisposalStatus'
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Disposal list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedDisposals'
+    post:
+      tags: [Disposals]
+      summary: Create disposal
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [code, reason, items]
+              properties:
+                code:
+                  type: string
+                reason:
+                  type: string
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DisposalItem'
+                totalValue:
+                  type: number
+                boardMembers:
+                  type: array
+                  items:
+                    type: string
+                boardRequired:
+                  type: boolean
+                minutesFile:
+                  type: string
+                  format: binary
+                minutesFileUrl:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Disposal'
+  /disposals/{id}:
+    put:
+      tags: [Disposals]
+      summary: Update disposal
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DisposalItem'
+                totalValue:
+                  type: number
+                boardMembers:
+                  type: array
+                  items:
+                    type: string
+                boardRequired:
+                  type: boolean
+                minutesFile:
+                  type: string
+                  format: binary
+                minutesFileUrl:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Disposal'
+    delete:
+      tags: [Disposals]
+      summary: Delete disposal
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: Deleted
+  /disposals/{id}/transition:
+    post:
+      tags: [Disposals]
+      summary: Transition disposal status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to]
+              properties:
+                to:
+                  type: string
+                  enum: [approved, completed]
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Disposal'
+  /reports/overview:
+    get:
+      tags: [Reports]
+      summary: Get overview report
+      responses:
+        '200':
+          description: Overview data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ReportOverview'
+  /reports/inventory:
+    get:
+      tags: [Reports]
+      summary: Get inventory report
+      responses:
+        '200':
+          description: Inventory report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportInventoryRow'
+  /reports/inbound:
+    get:
+      tags: [Reports]
+      summary: Get inbound report
+      responses:
+        '200':
+          description: Inbound report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportInboundRow'
+  /reports/receipts:
+    get:
+      tags: [Reports]
+      summary: Get inbound report (alias)
+      responses:
+        '200':
+          description: Inbound report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportInboundRow'
+  /reports/outbound:
+    get:
+      tags: [Reports]
+      summary: Get outbound report
+      responses:
+        '200':
+          description: Outbound report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportOutboundRow'
+  /reports/deliveries:
+    get:
+      tags: [Reports]
+      summary: Get outbound report (alias)
+      responses:
+        '200':
+          description: Outbound report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportOutboundRow'
+  /reports/stocktake:
+    get:
+      tags: [Reports]
+      summary: Get stocktake report
+      responses:
+        '200':
+          description: Stocktake report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportStocktakeRow'
+  /reports/stocktaking:
+    get:
+      tags: [Reports]
+      summary: Get stocktake report (alias)
+      responses:
+        '200':
+          description: Stocktake report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportStocktakeRow'
+  /reports/{type}/pdf:
+    get:
+      tags: [Reports]
+      summary: Download report as PDF
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: [overview, inventory, inbound, receipts, outbound, deliveries, stocktake, stocktaking]
+      responses:
+        '200':
+          description: PDF stream
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+  /upload/image:
+    post:
+      tags: [Upload]
+      summary: Upload image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [image]
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadImageResponse'
+  /transactions:
+    get:
+      tags: [Transactions]
+      summary: List transactions
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sort
+          schema:
+            type: string
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: type
+          schema:
+            $ref: '#/components/schemas/FinancialTransactionType'
+        - in: query
+          name: partnerId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/FinancialTransactionStatus'
+        - in: query
+          name: referenceType
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Transaction list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedTransactions'
+    post:
+      tags: [Transactions]
+      summary: Create transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [partnerId, type, amount]
+              properties:
+                partnerId:
+                  $ref: '#/components/schemas/ObjectId'
+                type:
+                  $ref: '#/components/schemas/FinancialTransactionType'
+                amount:
+                  type: number
+                status:
+                  $ref: '#/components/schemas/FinancialTransactionStatus'
+                referenceId:
+                  type: string
+                referenceType:
+                  type: string
+                  enum: [Receipt, Delivery, Return, Manual]
+                date:
+                  type: string
+                  format: date-time
+                note:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialTransaction'
+  /transactions/export:
+    get:
+      tags: [Transactions]
+      summary: Export transactions to Excel
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: type
+          schema:
+            $ref: '#/components/schemas/FinancialTransactionType'
+        - in: query
+          name: partnerId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/FinancialTransactionStatus'
+        - in: query
+          name: referenceType
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Excel file
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+  /transactions/stats:
+    get:
+      tags: [Transactions]
+      summary: Get transaction stats
+      responses:
+        '200':
+          description: Stats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  revenue:
+                    type: number
+                  expense:
+                    type: number
+                  profit:
+                    type: number
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: List notifications for current user
+      responses:
+        '200':
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+                  meta:
+                    type: object
+                    properties:
+                      unreadCount:
+                        type: integer
+  /notifications/{id}/read:
+    patch:
+      tags: [Notifications]
+      summary: Mark notification as read
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /notifications/read-all:
+    patch:
+      tags: [Notifications]
+      summary: Mark all notifications as read
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /settings:
+    get:
+      tags: [Settings]
+      summary: List settings
+      parameters:
+        - in: query
+          name: group
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Setting'
+    patch:
+      tags: [Settings]
+      summary: Update setting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [key, value]
+              properties:
+                key:
+                  type: string
+                value:
+                  oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+                    - type: array
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Setting'
+  /audit:
+    get:
+      tags: [Audit]
+      summary: List audit logs
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: entity
+          schema:
+            type: string
+        - in: query
+          name: action
+          schema:
+            type: string
+        - in: query
+          name: actorId
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Audit log list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedAuditLogs'
