@@ -205,7 +205,7 @@ const seedUsers = async () => {
 const seedCategories = async () => {
   const inserted = await CategoryModel.insertMany(CATEGORIES.slice(0, SEED_LIMITS.categories));
   logger.info(`✓ Seeded ${inserted.length} categories`);
-  return inserted.map((cat) => ({ _id: cat._id as Types.ObjectId, code: cat.code, name: cat.name, description: cat.description }));
+  return inserted;
 };
 
 const seedPartners = async () => {
