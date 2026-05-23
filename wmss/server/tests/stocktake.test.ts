@@ -77,7 +77,7 @@ describe('Stocktake API', () => {
         }
     });
 
-    it('should create a stocktake draft', async () => {
+    it('should create a stocktake with status "diff" if there is a discrepancy', async () => {
         const res = await request(app)
             .post('/api/v1/stocktakes')
             .set('Authorization', `Bearer ${token}`)
@@ -87,121 +87,115 @@ describe('Stocktake API', () => {
                 items: [{
                     productId,
                     locationId,
-                    countedQty: 8 // Discrepancy: -2
+                    countedQty: 8 // Discrepancy: system has 10, counted is 8
                 }]
             });
 
         expect(res.status).toBe(201);
-        expect(res.body.data.status).toBe('draft');
+        expect(res.body.data.status).toBe('diff');
         expect(res.body.data.items[0].systemQty).toBe(10);
         expect(res.body.data.items[0].countedQty).toBe(8);
     });
 
-    it('should approve stocktake and create adjustment', async () => {
-        // 1. Create Draft
-        const stocktake = await StocktakeModel.create({
-            code: 'ST-TEST-002',
+    it('should create a stocktake with status "pass" if there is no discrepancy', async () => {
+        const res = await request(app)
+            .post('/api/v1/stocktakes')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                code: 'ST-TEST-002',
+                date: new Date().toISOString(),
+                items: [{
+                    productId,
+                    locationId,
+                    countedQty: 10 // No discrepancy: system has 10, counted is 10
+                }]
+            });
+
+        expect(res.status).toBe(201);
+        expect(res.body.data.status).toBe('pass');
+        expect(res.body.data.items[0].systemQty).toBe(10);
+        expect(res.body.data.items[0].countedQty).toBe(10);
+    });
+
+    it('should list stocktakes with pagination and filters', async () => {
+        // Create two stocktakes
+        await StocktakeModel.create({
+            code: 'ST-LIST-001',
             date: new Date(),
-            status: 'draft',
+            status: 'diff',
             items: [{
                 productId,
                 locationId,
                 systemQty: 10,
-                countedQty: 12 // Discrepancy: +2
+                countedQty: 12
             }]
         });
 
-        // 2. Approve
+        await StocktakeModel.create({
+            code: 'ST-LIST-002',
+            date: new Date(),
+            status: 'pass',
+            items: [{
+                productId,
+                locationId,
+                systemQty: 10,
+                countedQty: 10
+            }]
+        });
+
         const res = await request(app)
-            .post(`/api/v1/stocktakes/${stocktake.id}/approve`)
-            .set('Authorization', `Bearer ${token}`)
-            .send({ minutes: 'Approved via test' });
+            .get('/api/v1/stocktakes')
+            .set('Authorization', `Bearer ${token}`);
 
         expect(res.status).toBe(200);
-        expect(res.body.data.status).toBe('approved');
-        expect(res.body.data.adjustmentId).toBeDefined();
+        expect(res.body.data).toBeDefined();
+        expect(res.body.data.length).toBeGreaterThanOrEqual(2);
     });
 
-    it('should apply stocktake and update inventory', async () => {
-        // 1. Create Draft & Approve (mock flow by DB insertion)
-        // Need to create adjustment first as per logic? 
-        // Logic: approveStocktake creates Adjustment. applyStocktake applies Adjustment.
+    it('should update an existing stocktake and recompute status', async () => {
+        const stocktake = await StocktakeModel.create({
+            code: 'ST-UPDATE-001',
+            date: new Date(),
+            status: 'pass',
+            items: [{
+                productId,
+                locationId,
+                systemQty: 10,
+                countedQty: 10 // Initial state: pass
+            }]
+        });
 
-        // Let's use the API flow to be safe and integration-like
-        // A. Create
-        const createRes = await request(app)
-            .post('/api/v1/stocktakes')
+        const res = await request(app)
+            .put(`/api/v1/stocktakes/${stocktake.id}`)
             .set('Authorization', `Bearer ${token}`)
             .send({
-                code: 'ST-TEST-003-' + Date.now(),
-                date: new Date().toISOString(),
-                items: [{ productId, locationId, countedQty: 15 }] // +5
+                items: [{
+                    productId,
+                    locationId,
+                    countedQty: 7 // Update state: diff
+                }]
             });
-        const stId = createRes.body.data._id;
 
-        // B. Approve
-        const approveRes = await request(app)
-            .post(`/api/v1/stocktakes/${stId}/approve`)
-            .set('Authorization', `Bearer ${token}`);
-        if (approveRes.status !== 200) {
-            console.error('Approve failed:', JSON.stringify(approveRes.body, null, 2));
-        }
-        expect(approveRes.status).toBe(200);
-
-        // C. Apply
-        const applyRes = await request(app)
-            .post(`/api/v1/stocktakes/${stId}/apply`)
-            .set('Authorization', `Bearer ${token}`);
-
-        if (applyRes.status !== 200) {
-            console.error('Apply failed:', JSON.stringify(applyRes.body, null, 2));
-        }
-        expect(applyRes.status).toBe(200);
-        expect(applyRes.body.data.status).toBe('applied');
-
-        // Check Inventory
-        const inv = await InventoryModel.findOne({ productId, locationId });
-        expect(inv?.quantity).toBe(15);
+        expect(res.status).toBe(200);
+        expect(res.body.data.status).toBe('diff');
+        expect(res.body.data.items[0].countedQty).toBe(7);
     });
 
-    it('should prevent non-managers from approving', async () => {
-        // Create Staff User
-        const staff = await UserModel.create({
-            email: 'staff@test.com',
-            passwordHash: 'hash',
-            fullName: 'Staff',
-            role: 'Staff'
-        });
-        const login = await request(app).post('/api/v1/auth/login').send({
-            email: 'staff@test.com',
-            password: 'Manager123!' // Using same password hash from setup would be easier but let's re-hash or just reuse logic
-        });
-        // Wait, I cannot login with "Manager123!" if I put "hash". 
-        // Need real hash.
-
-        // Re-use logic:
-        const passwordHash = await bcrypt.hash('Staff123!', 10);
-        await UserModel.findOneAndUpdate({ email: 'staff@test.com' }, { passwordHash });
-
-        const staffLogin = await request(app).post('/api/v1/auth/login').send({
-            email: 'staff@test.com',
-            password: 'Staff123!'
-        });
-        const staffToken = staffLogin.body.data.accessToken;
-
-        // Create Draft
+    it('should delete a stocktake', async () => {
         const stocktake = await StocktakeModel.create({
-            code: 'ST-TEST-004',
+            code: 'ST-DELETE-001',
             date: new Date(),
-            status: 'draft',
+            status: 'pass',
             items: []
         });
 
-        // Attempt Approve
         const res = await request(app)
-            .post(`/api/v1/stocktakes/${stocktake.id}/approve`)
-            .set('Authorization', `Bearer ${staffToken}`);
+            .delete(`/api/v1/stocktakes/${stocktake.id}`)
+            .set('Authorization', `Bearer ${token}`);
 
-        expect(res.status).toBe(403);
+        expect(res.status).toBe(204);
+
+        const found = await StocktakeModel.findById(stocktake.id);
+        expect(found).toBeNull();
     });
 });

@@ -66,7 +66,7 @@ describe('ReportsPage', () => {
 
         await waitFor(() => {
             // Check stat cards
-            expect(screen.getByText('Products')).toBeInTheDocument();
+            expect(screen.getByText('reports.stats.products')).toBeInTheDocument();
             expect(screen.getByText('10')).toBeInTheDocument();
             expect(screen.getByText('$1000')).toBeInTheDocument(); // Formatter mock
 
@@ -86,7 +86,7 @@ describe('ReportsPage', () => {
         render(<ReportsPage />);
 
         // Click Inventory Tab
-        const inventoryTab = screen.getByText('Inventory Level');
+        const inventoryTab = screen.getByText('reports.tabs.inventoryLevel');
 
         fireEvent.click(inventoryTab);
 
@@ -110,7 +110,7 @@ describe('ReportsPage', () => {
         global.URL.createObjectURL = vi.fn(() => 'mock-url');
         global.URL.revokeObjectURL = vi.fn();
 
-        const exportBtn = screen.getByText('Export PDF');
+        const exportBtn = screen.getByText('reports.common.exportPdf');
         fireEvent.click(exportBtn);
 
         await waitFor(() => {

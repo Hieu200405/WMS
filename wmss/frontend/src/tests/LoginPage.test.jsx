@@ -77,7 +77,7 @@ describe('LoginPage', () => {
         fireEvent.click(submitButton); // Use default values since they are pre-filled
 
         await waitFor(() => {
-            expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
+            expect(screen.getByText('auth.invalid')).toBeInTheDocument();
         });
     });
 });

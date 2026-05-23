@@ -2,6 +2,7 @@ import clsx from 'clsx';
 
 const CONFIG = {
   // Receipt/Delivery/Stocktake/Return
+  draft: { label: 'Nháp', color: 'bg-slate-500/10 text-slate-600' },
   approved: { label: 'Đã duyệt', color: 'bg-indigo-500/10 text-indigo-600' },
   supplierConfirmed: { label: 'NCC Xác nhận', color: 'bg-blue-500/10 text-blue-600' },
   completed: { label: 'Hoàn tất', color: 'bg-emerald-500/10 text-emerald-600' },
@@ -16,7 +17,7 @@ const CONFIG = {
 };
 
 export function StatusBadge({ status, className }) {
-  const norm = status?.toLowerCase() || 'pass';
+  const norm = status?.toLowerCase() || 'draft';
   const cfg = CONFIG[norm] || { label: status, color: 'bg-slate-200 text-slate-600' };
 
   return (
